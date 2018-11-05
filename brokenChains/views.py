@@ -41,3 +41,13 @@ class SessionList(generics.ListCreateAPIView):
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
 		return self.create(request, *args, **kwargs)
+
+
+class SessionDetail(generics.RetrieveDestroyAPIView):
+	queryset = Session.objects.all()
+	serializer_class = SessionSerializer
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+	@method_decorator(ensure_csrf_cookie)
+	def delete(self, request, *args, **kwargs):
+		return self.destroy(request, *args, **kwargs)
