@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'chainsApp.apps.BrokenchainsConfig',
+    'brokenChains.apps.BrokenchainsConfig',
 ]
 
 MIDDLEWARE = [
