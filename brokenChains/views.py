@@ -26,7 +26,14 @@ class HabitList(generics.ListCreateAPIView):
 		return self.create(request, *args, **kwargs)
 
 
+class HabitDetail(generics.RetrieveDestroyAPIView):
+	queryset = Habit.objects.all()
+	serializer_class = HabitSerializer
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+	@method_decorator(ensure_csrf_cookie)
+	def delete(self, request, *args, **kwargs):
+		return self.destroy(request, *args, **kwargs)
 
 
 
