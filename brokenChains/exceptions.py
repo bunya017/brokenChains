@@ -15,3 +15,16 @@ class UniqueTogetherValidationError(APIException):
 			self.detail = {field: force_text(detail)}
 		else:
 			self.detail = {'detail': force_text(self.default_detail)}
+
+
+class RaiseCustomError(APIException):
+	status_code = status.HTTP_404_NOT_FOUND
+	default_detail = '404 Not Found.'
+
+	def __init__(self, detail, status_code):
+		if status_code is not None:
+			self.status_code = status_code
+		if detail is not None:
+			self.detail = {'detail': force_text(detail)}
+		else:
+			self.detail = {'detail': force_text(self.default_detail)}

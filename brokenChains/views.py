@@ -7,16 +7,22 @@ from rest_framework.authtoken.views import ObtainAuthToken as DRFObtainAuthToken
 from rest_framework.response import Response
 from .models import Habit, Session
 from .serializers import HabitSerializer, SessionSerializer, UserSerializer
-from .exceptions import UniqueTogetherValidationError
+from .exceptions import UniqueTogetherValidationError, RaiseCustomError
 
 
 
 class HabitList(generics.ListCreateAPIView):
-	queryset = Habit.objects.all()
 	serializer_class = HabitSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-	@method_decorator(ensure_csrf_cookie)
+	def get_queryset(self):
+		try:
+			queryset = Habit.objects.all().filter(owner=self.request.user)
+		except TypeError:
+			raise RaiseCustomError(detail=None, status_code=None)
+		else:
+			return queryset
+
 	def perform_create(self, serializer):
 		data = serializer.validated_data
 		name = data['name'].title()
@@ -31,9 +37,16 @@ class HabitList(generics.ListCreateAPIView):
 
 
 class HabitDetail(generics.RetrieveDestroyAPIView):
-	queryset = Habit.objects.all()
 	serializer_class = HabitSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+	def get_queryset(self):
+		try:
+			queryset = Habit.objects.all().filter(owner=self.request.user)
+		except TypeError:
+			raise RaiseCustomError(detail=None, status_code=None)
+		else:
+			return queryset
 
 	@method_decorator(ensure_csrf_cookie)
 	def delete(self, request, *args, **kwargs):
@@ -41,9 +54,16 @@ class HabitDetail(generics.RetrieveDestroyAPIView):
 
 
 class SessionList(generics.ListCreateAPIView):
-	queryset = Session.objects.all()
 	serializer_class = SessionSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+	def get_queryset(self):
+		try:
+			queryset = Session.objects.all().filter(habit__owner=self.request.user)
+		except TypeError:
+			raise RaiseCustomError(detail=None, status_code=None)
+		else:
+			return queryset
 
 	def perform_create(self, serializer):
 		data = serializer.validated_data
@@ -60,9 +80,16 @@ class SessionList(generics.ListCreateAPIView):
 
 
 class SessionDetail(generics.RetrieveDestroyAPIView):
-	queryset = Session.objects.all()
 	serializer_class = SessionSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+	def get_queryset(self):
+		try:
+			queryset = Session.objects.all().filter(habit__owner=self.request.user)
+		except TypeError:
+			raise RaiseCustomError(detail=None, status_code=None)
+		else:
+			return queryset
 
 	@method_decorator(ensure_csrf_cookie)
 	def delete(self, request, *args, **kwargs):
