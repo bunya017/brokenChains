@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from brokenChains.views import ObtainAuthToken
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('brokenChains.urls')),
-
+    path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', ObtainAuthToken.as_view()),
 ]

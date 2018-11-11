@@ -1,13 +1,12 @@
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
-from rest_framework import generics, permissions
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions, serializers
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken as DRFObtainAuthToken
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework import serializers
 from .models import Habit, Session
-from .serializers import HabitSerializer, SessionSerializer
+from .serializers import HabitSerializer, SessionSerializer, UserSerializer
 from .exceptions import UniqueTogetherValidationError
 
 
@@ -17,6 +16,7 @@ class HabitList(generics.ListCreateAPIView):
 	serializer_class = HabitSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+	@method_decorator(ensure_csrf_cookie)
 	def perform_create(self, serializer):
 		data = serializer.validated_data
 		name = data['name'].title()
@@ -67,3 +67,15 @@ class SessionDetail(generics.RetrieveDestroyAPIView):
 	@method_decorator(ensure_csrf_cookie)
 	def delete(self, request, *args, **kwargs):
 		return self.destroy(request, *args, **kwargs)
+
+
+class ObtainAuthToken(DRFObtainAuthToken):
+
+	@method_decorator(ensure_csrf_cookie)
+	def post(self, request, *args, **kwargs):
+		serializer = self.serializer_class(data=request.data,
+										   context={'request': request})
+		serializer.is_valid(raise_exception=True)
+		user = serializer.validated_data['user']
+		token, created = Token.objects.get_or_create(user=user)
+		return Response({'token': token.key})
