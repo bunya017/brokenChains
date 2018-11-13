@@ -106,3 +106,11 @@ class ObtainAuthToken(DRFObtainAuthToken):
 		user = serializer.validated_data['user']
 		token, created = Token.objects.get_or_create(user=user)
 		return Response({'token': token.key})
+
+
+class UserRegistration(generics.CreateAPIView):
+	serializer_class = UserSerializer
+
+	@method_decorator(ensure_csrf_cookie)
+	def post(self, request, *args, **kwargs):
+		return self.create(request, *args, **kwargs)
