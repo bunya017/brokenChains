@@ -110,7 +110,7 @@ class ObtainAuthToken(DRFObtainAuthToken):
 
 class UserRegistration(generics.CreateAPIView):
 	serializer_class = UserSerializer
-
+	permission_classes = (permissions.AllowAny,)
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
 		return self.create(request, *args, **kwargs)
