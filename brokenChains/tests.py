@@ -80,7 +80,35 @@ class ReadHabitTest(APITestCase):
 
 	def test_can_read_habit_detail(self):
 		"""
-		Test user can read habits detail.
+		Test user can read habit detail.
 		"""
-		response = self.client.get(reverse('habit-detail', args=[self.user.id]))
+		response = self.client.get(reverse('habit-detail', args=[self.new_habit.id]))
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class CreateSessionTest(APITestCase):
+	def setUp(self):
+		self.user = User.objects.create_user('testUser', 'testEmail@email.com', 'testPassword')
+		self.client.login(username='testUser', password='testPassword')
+		self.url = reverse('sessions-list')
+		self.habit = Habit(
+			owner=self.user,
+			name='Work out',
+			goal='physical fitness.',
+			stop_date='2018-12-30'
+		)
+		self.habit.save()
+		self.data = {
+			'habit': self.habit.id,
+			'name': 'day 1',
+			'text': 'finally started',
+		}
+
+	def test_can_create_session(self):
+		"""
+		Test user can create new session.
+		"""
+		response = self.client.post(self.url, self.data)
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
