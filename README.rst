@@ -1,6 +1,8 @@
 ============
 BrokenChains
 ============
+.. image:: https://travis-ci.org/bunya017/brokenChains.svg?branch=master
+    :target: https://travis-ci.org/bunya017/brokenChains
 
 BrokenChains is a habit tracking api built with ``django``
 and ``djangoRestFramework``. Its an attempt to learn API
