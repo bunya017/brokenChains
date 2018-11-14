@@ -3,7 +3,8 @@ BrokenChains
 ============
 
 BrokenChains is a habit tracking api built with ``django``
-and ``djangoRestFramework``.
+and ``djangoRestFramework``. Its an attempt to learn API
+development with djangorestframework.
 
 
 Requirements
@@ -32,6 +33,8 @@ Usage
 Run ``python manage.py runserver`` to start the server and
 open ``http://localhost:8000/api`` on your browser
 
+``Note``: All actions require authentication/authorization.
+
 
 API Endpoints
 ------------
@@ -45,3 +48,10 @@ API Endpoints
 * ``POST /api/sessions`` - Create session
 * ``GET /api/sessions/{id}`` - Show session detail
 * ``DELETE /api/sessions/{id}`` - Delete session
+
+
+ToDo
+----
+* Web front-end client
+* Android client
+* iOs client
