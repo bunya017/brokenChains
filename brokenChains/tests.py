@@ -59,3 +59,28 @@ class CreateHabitTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
+class ReadHabitTest(APITestCase):
+	def setUp(self):
+		self.user = User.objects.create_user('testUser', 'testEmail@email.com', 'testPassword')
+		self.client.login(username='testUser', password='testPassword')
+		self.new_habit = Habit(
+			owner=self.user,
+			name='Work out',
+			goal='physical fitness.',
+			stop_date='2018-12-30'
+		)
+		self.new_habit.save()
+
+	def test_can_read_habits_list(self):
+		"""
+		Test user can read habits list.
+		"""
+		response = self.client.get(reverse('habits-list'))
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+	def test_can_read_habit_detail(self):
+		"""
+		Test user can read habits detail.
+		"""
+		response = self.client.get(reverse('habit-detail', args=[self.user.id]))
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
