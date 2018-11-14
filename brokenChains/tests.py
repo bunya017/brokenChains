@@ -19,3 +19,15 @@ class UserRegistrationTest(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
+class UserAuthenticationTests(APITestCase):
+	def setUp(self):
+		self.user = User.objects.create_user('testUser', 'testEmail@email.com', 'testPassword')
+		self.data = {
+			'username': 'testUser',
+			'password': 'testPassword'
+		}
+
+	def test_get_user_auth_token(self):
+		url = reverse('get-auth-token')
+		response = self.client.post(url, self.data)
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
