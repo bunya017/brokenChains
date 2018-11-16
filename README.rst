@@ -19,15 +19,14 @@ Requirements
 
 Installation
 ------------
-
-1. Create and activate a python virtual environment::
-    venv --your-env--
-2. Activate the virtual environment::
-    --your-env--/Scripts/activate
-    pip install -r requirements.txt
+1. Create and activate a python virtual environment:
+    * venv --your-env--
+2. Activate the virtual environment:
+    * --your-env--/Scripts/activate
+    * pip install -r requirements.txt
 3. Make and run migrations:
-    python manage.py makemigrations
-    python manage.py migrate
+    * python manage.py makemigrations
+    * python manage.py migrate
 
 
 Usage
