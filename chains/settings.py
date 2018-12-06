@@ -106,9 +106,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # django-cors-headers
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:8080',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_WHITELIST = (
+#    'localhost:8080',
+#)
 
 # rest_framework
 
