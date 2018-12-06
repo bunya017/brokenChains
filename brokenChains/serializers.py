@@ -7,7 +7,7 @@ from .models import Habit, Session
 class SessionSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Session
-		fields = ('url', 'habit', 'name', 'text', 'date', 'is_complete')
+		fields = ('id', 'url', 'habit', 'name', 'text', 'date', 'is_complete')
 
 
 class HabitSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class HabitSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Habit
-		fields = ('url', 'owner',  'name', 'goal', 'start_date', 'stop_date', 'sessions')
+		fields = ('id', 'url', 'owner',  'name', 'goal', 'start_date', 'stop_date', 'sessions')
 
 
 class UserSerializer(serializers.ModelSerializer):
