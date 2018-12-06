@@ -45,11 +45,8 @@ class Session(models.Model):
 		unique_together = ('habit', 'name')
 
 	def save(self, *args, **kwargs):
-		if self.habit.name in self.name:
-			self.name = self.name.title()
-			pass
-		else:
-			self.name = self.habit.name +" - "+ self.name.title()
+		sessions_count = Session.objects.filter(habit=self.habit).count()
+		self.name = self.habit.name + " - Day " + str(sessions_count + 1)
 		super(Session, self).save(*args, **kwargs)
 
 	def __str__(self):
