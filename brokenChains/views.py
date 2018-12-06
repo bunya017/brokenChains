@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from rest_framework import generics, permissions, serializers
-from rest_framework.authentication import TokenAuthentication 
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken as DRFObtainAuthToken
 from rest_framework.response import Response
@@ -15,7 +14,6 @@ from .exceptions import UniqueTogetherValidationError, RaiseCustomError
 class HabitList(generics.ListCreateAPIView):
 	serializer_class = HabitSerializer
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-	authentication_classes = (TokenAuthentication,)
 
 	def get_queryset(self):
 		try:
