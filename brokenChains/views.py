@@ -65,15 +65,6 @@ class SessionList(generics.ListCreateAPIView):
 		else:
 			return queryset
 
-	def perform_create(self, serializer):
-		data = serializer.validated_data
-		habit = data['habit']
-		name = habit.name +' - '+ data['name'].title()
-		message = 'Oops! You have created a session with this name: \'' + data['name'] + '\' already.'
-		if Session.objects.filter(habit=habit, name=name).exists():
-			raise UniqueTogetherValidationError(message, 'name', None)
-		serializer.save()
-
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
 		return self.create(request, *args, **kwargs)
