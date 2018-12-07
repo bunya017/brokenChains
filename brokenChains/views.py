@@ -4,10 +4,10 @@ from django.utils.decorators import method_decorator
 from rest_framework import generics, permissions, serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken as DRFObtainAuthToken
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from rest_framework.response import Response
 from .models import Habit, Session
 from .serializers import HabitSerializer, SessionSerializer, UserSerializer
-from .exceptions import UniqueTogetherValidationError, RaiseCustomError
 
 
 
@@ -19,16 +19,16 @@ class HabitList(generics.ListCreateAPIView):
 		try:
 			queryset = Habit.objects.all().filter(owner=self.request.user)
 		except TypeError:
-			raise RaiseCustomError(detail=None, status_code=None)
+			raise NotAuthenticated
 		else:
 			return queryset
 
 	def perform_create(self, serializer):
 		data = serializer.validated_data
 		name = data['name'].title()
-		message = 'Oops! You have created a habit with this name: \'' + data['name'] + '\' already.'
+		detail = 'Oops! You have created a habit with this name: \'' + data['name'] + '\' already.'
 		if Habit.objects.filter(owner=self.request.user, name=name).exists():
-			raise UniqueTogetherValidationError(message, 'name', None)
+			raise PermissionDenied(detail=detail)
 		serializer.save(owner=self.request.user)
 
 	@method_decorator(ensure_csrf_cookie)
@@ -44,7 +44,7 @@ class HabitDetail(generics.RetrieveDestroyAPIView):
 		try:
 			queryset = Habit.objects.all().filter(owner=self.request.user)
 		except TypeError:
-			raise RaiseCustomError(detail=None, status_code=None)
+			raise NotAuthenticated
 		else:
 			return queryset
 
@@ -61,7 +61,7 @@ class SessionList(generics.ListCreateAPIView):
 		try:
 			queryset = Session.objects.all().filter(habit__owner=self.request.user)
 		except TypeError:
-			raise RaiseCustomError(detail=None, status_code=None)
+			raise NotAuthenticated
 		else:
 			return queryset
 
@@ -78,7 +78,7 @@ class SessionDetail(generics.RetrieveDestroyAPIView):
 		try:
 			queryset = Session.objects.all().filter(habit__owner=self.request.user)
 		except TypeError:
-			raise RaiseCustomError(detail=None, status_code=None)
+			raise NotAuthenticated
 		else:
 			return queryset
 
@@ -91,8 +91,7 @@ class ObtainAuthToken(DRFObtainAuthToken):
 
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
-		serializer = self.serializer_class(data=request.data,
-										   context={'request': request})
+		serializer = self.serializer_class(data=request.data, context={'request': request})
 		serializer.is_valid(raise_exception=True)
 		user = serializer.validated_data['user']
 		token, created = Token.objects.get_or_create(user=user)
@@ -102,6 +101,7 @@ class ObtainAuthToken(DRFObtainAuthToken):
 class UserRegistration(generics.CreateAPIView):
 	serializer_class = UserSerializer
 	permission_classes = (permissions.AllowAny,)
+
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
 		return self.create(request, *args, **kwargs)
