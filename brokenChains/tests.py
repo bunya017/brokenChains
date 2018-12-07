@@ -100,7 +100,6 @@ class CreateSessionTest(APITestCase):
 		self.habit.save()
 		self.data = {
 			'habit': self.habit.id,
-			'name': 'day 1',
 			'text': 'finally started',
 		}
 
@@ -125,7 +124,6 @@ class ReadSessionTest(APITestCase):
 		self.habit.save()
 		self.session = Session(
 			habit=self.habit,
-			name='day 1',
 			text='finally started'
 		)
 		self.session.save()
