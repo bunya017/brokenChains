@@ -51,8 +51,11 @@ API Endpoints
 * ``DELETE /api/sessions/{id}`` - Delete session
 
 
+Resources
+---------
+* Frontend Client: `brokenChains-Cli <https://github.com/bunya017/brokenChains-Cli>`_
+
+
 ToDo
 ----
-* Web front-end client
-* Android client
-* iOs client
+* Mobile client
