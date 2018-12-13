@@ -22,6 +22,6 @@ from brokenChains.views import ObtainAuthToken
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('brokenChains.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', ObtainAuthToken.as_view(), name='get-auth-token'),
+    path('api/api-auth/', include('rest_framework.urls')),
+    path('api/api-token-auth/', ObtainAuthToken.as_view(), name='get-auth-token'),
 ]
