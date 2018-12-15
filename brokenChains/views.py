@@ -106,7 +106,9 @@ class UserRegistration(generics.CreateAPIView):
 	def perform_create(self, serializer):
 		data = serializer.validated_data
 		email = data['email']
-		if User.objects.filter(email=email).exists():
+		if email == '':
+			raise serializers.ValidationError({'email': 'This field may not be blank.'})
+		elif User.objects.filter(email=email).exists():
 			raise serializers.ValidationError({'email': 'A user with that email already exists.'})
 
 		serializer.save()
