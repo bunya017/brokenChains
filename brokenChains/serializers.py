@@ -21,10 +21,11 @@ class HabitSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+	habits = HabitSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = User
-		fields = ('id', 'username', 'email', 'password')
+		fields = ('id', 'username', 'email', 'habits', 'password')
 		extra_kwargs = {'password': {'write_only': True}}
 
 	def create(self, validated_data):
