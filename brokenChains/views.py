@@ -95,8 +95,7 @@ class ObtainAuthToken(DRFObtainAuthToken):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.validated_data['user']
 		token, created = Token.objects.get_or_create(user=user)
-		serialized_user = UserSerializer(token.user, context={'request': request})
-		return Response({'token': token.key, 'user': serialized_user.data})
+		return Response({'token': token.key})
 
 
 class UserRegistration(generics.CreateAPIView):
@@ -120,7 +119,7 @@ class UserRegistration(generics.CreateAPIView):
 		headers = self.get_success_headers(serializer.data)
 		token, created = Token.objects.get_or_create(user=serializer.instance)
 		serialized_user = UserSerializer(token.user, context={'request': request})
-		return Response({'token': token.key, 'user': serialized_user.data}, status=status.HTTP_201_CREATED, headers=headers)
+		return Response({'token': token.key}, status=status.HTTP_201_CREATED, headers=headers)
 
 	@method_decorator(ensure_csrf_cookie)
 	def post(self, request, *args, **kwargs):
