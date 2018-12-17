@@ -1,9 +1,10 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+import datetime
 
 
 
@@ -17,8 +18,8 @@ class Habit(models.Model):
 	name = models.CharField(max_length=50)
 	owner = models.ForeignKey(User, related_name='habits', on_delete=models.CASCADE)
 	goal = models.CharField(max_length=150)
-	start_date = models.DateField(auto_now_add=True)
-	stop_date = models.DateField(blank=True, null=True)
+	start_date = models.DateField(default=datetime.datetime.now().date())
+	stop_date = models.DateField(default=datetime.datetime.now().date() + datetime.timedelta(days=21))
 
 	class Meta:
 		ordering = ('start_date',)
